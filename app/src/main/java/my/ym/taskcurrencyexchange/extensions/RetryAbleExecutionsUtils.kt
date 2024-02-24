@@ -22,7 +22,7 @@ private enum class NegativeAction {
  * cancel without going back is enough like on button click for ex. Register so on error just cancel
  * if don't want to try again, like [executeRetryAbleActionOrCancel] isa.
  */
-private fun <T : BaseResponse> BaseFragment<*>.executeRetryAbleActionOrGoBack(
+fun <T : BaseResponse> BaseFragment<*>.executeRetryAbleActionOrGoBack(
 	action: suspend () -> Result<T>,
 	scope: CoroutineScope = lifecycleScope,
 	showLoading: Boolean = true,
@@ -42,7 +42,7 @@ private fun <T : BaseResponse> BaseFragment<*>.executeRetryAbleActionOrGoBack(
 /**
  * @see executeRetryAbleActionOrGoBack
  */
-private fun <T : BaseResponse> BaseFragment<*>.executeRetryAbleActionOrCancel(
+fun <T : BaseResponse> BaseFragment<*>.executeRetryAbleActionOrCancel(
 	action: suspend () -> Result<T>,
 	scope: CoroutineScope = lifecycleScope,
 	showLoading: Boolean = true,
@@ -113,6 +113,9 @@ private fun <T : BaseResponse> BaseFragment<*>.executeRetryAbleActionOrEitherCan
 							}
 							ApiException.Reason.API_ERROR -> {
 								getString(R.string.unexpected_error_please_try_again_or_contact_us_if_persists)
+							}
+							ApiException.Reason.TIMEOUT_ERROR -> {
+								getString(R.string.timeout_error_due_to_poor_internet_connection_check_connection_try_again)
 							}
 							ApiException.Reason.CONNECTION_ERROR -> {
 								if (context.isNetworkAvailable()) {

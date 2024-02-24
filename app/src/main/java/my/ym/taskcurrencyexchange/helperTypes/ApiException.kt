@@ -17,6 +17,8 @@ class ApiException(
 		API_ERROR,
 		/** Connection error like have no internet connection or can't resolve the host or the server is down etc... */
 		CONNECTION_ERROR,
+		/** When timeout occurs isa. */
+		TIMEOUT_ERROR,
 		/** Any other reasons */
 		OTHER
 	}

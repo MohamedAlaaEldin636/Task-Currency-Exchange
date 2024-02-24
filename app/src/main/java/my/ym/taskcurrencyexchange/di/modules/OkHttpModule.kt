@@ -4,6 +4,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.components.SingletonComponent
 import my.ym.taskcurrencyexchange.BuildConfig
 import my.ym.taskcurrencyexchange.di.qualifiers.HeadersInterceptor
 import okhttp3.Interceptor
@@ -14,7 +15,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
-@InstallIn(ViewModelComponent::class)
+@InstallIn(SingletonComponent::class)
 object OkHttpModule {
 
     private const val TIMEOUT_IN_SEC = 10L

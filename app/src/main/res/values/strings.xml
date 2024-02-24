@@ -11,4 +11,11 @@
     <string name="there_is_a_problem_with_our_servers_please_try_again">There is a problem with our servers,\nPlease try again.</string>
     <string name="unexpected_error_please_try_again_or_contact_us_if_persists">Unexpected error, Please try again,\nOr contact us if persists</string>
     <string name="something_happened_on_our_end_please_try_again_or_contact_us_if_persists">Something happened on our end, Please try again,\nOr contact us if persists</string>
+    <string name="base_currency">Base Currency</string>
+    <string name="base_value">Base Value</string>
+    <string name="swap">Swap</string>
+    <string name="target_value">Target Value</string>
+    <string name="target_currency">Target Currency</string>
+    <string name="details">Details</string>
+    <string name="timeout_error_due_to_poor_internet_connection_check_connection_try_again"><![CDATA[Timeout error due to Poor Internet Connection,\nCheck Connection & try again]]></string>
 </resources>

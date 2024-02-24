@@ -7,7 +7,9 @@ import retrofit2.HttpException
 import timber.log.Timber
 import java.net.ConnectException
 import java.net.SocketException
+import java.net.SocketTimeoutException
 import java.net.UnknownHostException
+import java.util.concurrent.TimeoutException
 
 open class BaseRemoteDataSource {
 
@@ -41,6 +43,13 @@ open class BaseRemoteDataSource {
 
                     Result.failure(ApiException(
                         reason, throwable.code(), "Http Code ${throwable.code()}, Msg ${throwable.message()}"
+                    ))
+                }
+                is TimeoutException, is SocketTimeoutException -> {
+                    Result.failure(ApiException(
+                        ApiException.Reason.TIMEOUT_ERROR,
+                        null,
+                        "Timeout Connection, Msg ${throwable.message}"
                     ))
                 }
                 is UnknownHostException, is ConnectException, is SocketException -> {

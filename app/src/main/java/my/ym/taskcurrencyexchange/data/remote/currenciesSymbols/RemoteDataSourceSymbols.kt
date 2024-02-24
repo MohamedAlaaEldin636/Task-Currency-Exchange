@@ -1,4 +1,4 @@
-package my.ym.taskcurrencyexchange.data.remote
+package my.ym.taskcurrencyexchange.data.remote.currenciesSymbols
 
 import my.ym.taskcurrencyexchange.helperTypes.BaseRemoteDataSource
 import javax.inject.Inject

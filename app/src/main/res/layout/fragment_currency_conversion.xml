@@ -6,23 +6,222 @@
     tools:context="my.ym.taskcurrencyexchange.ui.currencyConversion.CurrencyConversionFragment">
 
     <data>
+        <import type="my.ym.taskcurrencyexchange.ui.currencyConversion.CurrencyConversionFragment.ChangeType"
+            alias="Type"/>
 
+        <variable
+            name="viewModel"
+            type="my.ym.taskcurrencyexchange.ui.currencyConversion.CurrencyConversionViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:id="@+id/constraintLayout"
 
-        <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:padding="16dp"
+        android:clipToPadding="false">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/baseCurrencyTextInputLayout"
+
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:hint="@string/base_currency"
+
+            app:expandedHintEnabled="false"
+
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+
+            android:labelFor="@id/baseCurrencyAutoCompleteTextView"
+
+            android:layout_marginEnd="8dp"
+
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/swapFab">
+
+            <AutoCompleteTextView
+                android:id="@+id/baseCurrencyAutoCompleteTextView"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                tools:text="EGP"
+                android:text="@{viewModel.baseCurrency}"
+
+                android:afterTextChanged="@{(editable) -> viewModel.afterChange(constraintLayout, Type.BASE_CURRENCY)}"
+
+                android:inputType="none"
+                android:imeOptions="actionNext"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/targetCurrencyTextInputLayout"
+
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:hint="@string/target_currency"
+
+            app:expandedHintEnabled="false"
+
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+
+            android:labelFor="@id/targetCurrencyAutoCompleteTextView"
+
+            android:layout_marginStart="8dp"
+
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/swapFab"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <AutoCompleteTextView
+                android:id="@+id/targetCurrencyAutoCompleteTextView"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                tools:text="USD"
+                android:text="@{viewModel.targetCurrency}"
+
+                android:afterTextChanged="@{(editable) -> viewModel.afterChange(constraintLayout, Type.TARGET_CURRENCY)}"
+
+                android:inputType="none"
+                android:imeOptions="actionNext"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/baseValueTextInputLayout"
+
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:hint="@string/base_value"
+
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+
+            android:layout_marginTop="24dp"
+
+            app:layout_constraintTop_toBottomOf="@id/baseCurrencyTextInputLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/baseCurrencyTextInputLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/baseValueTextInputEditText"
+
+                android:afterTextChanged="@{(editable) -> viewModel.afterChange(constraintLayout, Type.BASE_VALUE)}"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                tools:text="1"
+                android:text="@{viewModel.baseValue}"
+
+                android:inputType="numberDecimal"
+                android:imeOptions="actionNext"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/targetValueTextInputLayout"
+
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:hint="@string/target_value"
+
+            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+
+            android:layout_marginTop="24dp"
+
+            app:layout_constraintStart_toStartOf="@id/targetCurrencyTextInputLayout"
+            app:layout_constraintTop_toBottomOf="@id/baseCurrencyTextInputLayout"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/targetValueTextInputEditText"
+
+                android:afterTextChanged="@{(editable) -> viewModel.afterChange(constraintLayout, Type.TARGET_VALUE)}"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                tools:text="0.032"
+                android:text="@{viewModel.targetValue}"
+
+                android:inputType="numberDecimal"
+                android:imeOptions="actionDone"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/swapFab"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/app_name"
-            android:textSize="24sp"
-            android:textColor="@color/black"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+
+            app:srcCompat="@drawable/baseline_swap_horiz_24"
+            app:tint="@color/white"
+
+            app:backgroundTint="@color/primary"
+
+            app:fabCustomSize="48dp"
+
+            android:contentDescription="@string/swap"
+
+            android:onClick="@{v -> viewModel.swapTargetAndBaseCurrencies(v)}"
+
+            app:layout_constraintTop_toTopOf="@id/baseCurrencyTextInputLayout"
+            app:layout_constraintBottom_toBottomOf="@id/baseCurrencyTextInputLayout"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/swapValuesFab"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            app:srcCompat="@drawable/baseline_swap_horiz_24"
+            app:tint="@color/white"
+
+            app:backgroundTint="@color/primary"
+
+            app:fabCustomSize="48dp"
+
+            android:contentDescription="@string/swap"
+
+            android:onClick="@{v -> viewModel.swapTargetAndBaseValues(v)}"
+
+            app:layout_constraintTop_toTopOf="@id/baseValueTextInputLayout"
+            app:layout_constraintBottom_toBottomOf="@id/baseValueTextInputLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="24dp"
+
+            app:layout_constraintWidth_percent="0.4"
+
+            android:text="@string/details"
+
+            android:textSize="18sp"
+
+            app:cornerRadius="8dp"
+
+            android:onClick="@{v -> viewModel.goToDetailsScreen(v)}"
+
+            app:layout_constraintTop_toBottomOf="@id/baseValueTextInputLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

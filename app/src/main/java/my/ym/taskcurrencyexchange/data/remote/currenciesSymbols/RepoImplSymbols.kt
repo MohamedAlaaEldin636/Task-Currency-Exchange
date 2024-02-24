@@ -1,8 +1,8 @@
-package my.ym.taskcurrencyexchange.data.remote
+package my.ym.taskcurrencyexchange.data.remote.currenciesSymbols
 
-class RepoImplServices(
+class RepoImplSymbols(
 	private val remoteDataSource: RemoteDataSourceSymbols
-) : RepoServices {
+) : RepoSymbols {
 
 	override suspend fun getAllCurrenciesSymbols() =
 		remoteDataSource.getAllCurrenciesSymbols()
