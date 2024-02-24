@@ -5,14 +5,17 @@ pluginManagement {
 		gradlePluginPortal()
 	}
 }
+
 dependencyResolutionManagement {
 	repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+
 	repositories {
 		google()
 		mavenCentral()
 	}
 }
 
-rootProject.name = "Task Currency Exchange"
+rootProject.name = "Currency Exchange"
+
 include(":app")
  
