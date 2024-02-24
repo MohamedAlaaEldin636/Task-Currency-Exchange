@@ -2,10 +2,11 @@ package my.ym.taskcurrencyexchange.helperTypes
 
 class ApiException(
 	val reason: Reason,
+	val code: Int?,
 	message: String?,
 ) : Exception("$reason -> $message") {
 
-	constructor(reason: Reason, cause: Throwable?) : this(reason, cause?.message)
+	//constructor(reason: Reason, cause: Throwable?) : this(reason, cause?.message)
 
 	enum class Reason {
 		/** 4xx errors */

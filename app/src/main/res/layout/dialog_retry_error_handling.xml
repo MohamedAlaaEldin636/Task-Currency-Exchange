@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_gravity="center"
+
+        android:layout_margin="16dp"
+
+        android:background="@drawable/round_rect_16"
+
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/msgTextView"
+
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textDirection="locale"
+            android:textSize="20sp"
+
+            tools:text="No Internet Connection,\nPlease try Again"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:id="@+id/positiveButton"
+
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="4dp"
+            android:background="@drawable/round_rect_5"
+            android:gravity="center"
+
+            android:paddingStart="9dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="9dp"
+            android:paddingBottom="10dp"
+
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:text="@string/retry"
+            android:textStyle="bold"
+
+            app:backgroundTint="@color/success"
+
+            app:layout_constraintEnd_toStartOf="@id/negativeButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/msgTextView" />
+
+        <TextView
+            android:id="@+id/negativeButton"
+
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginStart="4dp"
+            android:background="@drawable/round_rect_5"
+            android:gravity="center"
+
+            android:paddingStart="9dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="9dp"
+            android:paddingBottom="10dp"
+
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            tools:text="@string/back"
+
+            app:backgroundTint="@color/error"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/positiveButton"
+            app:layout_constraintTop_toTopOf="@id/positiveButton" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

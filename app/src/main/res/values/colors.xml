@@ -2,4 +2,9 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="primary">#4CAF50</color>
+    <color name="primary_dark">#388E3C</color>
+    <color name="dialog_background">#33FFFFFF</color>
+    <color name="error">#d32f2f</color>
+    <color name="success">#388e3c</color>
 </resources>

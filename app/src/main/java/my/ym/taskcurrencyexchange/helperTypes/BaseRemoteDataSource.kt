@@ -23,7 +23,7 @@ open class BaseRemoteDataSource {
                 Timber.w("api invalid response -> $response")
 
                 Result.failure(ApiException(
-                    ApiException.Reason.API_ERROR, response.error?.let {
+                    ApiException.Reason.API_ERROR, response.error?.code, response.error?.let {
                         "Code ${it.code}, Type ${it.type}, Info -> ${it.info}"
                     }
                 ))
@@ -40,18 +40,19 @@ open class BaseRemoteDataSource {
                     }
 
                     Result.failure(ApiException(
-                        reason, "Http Code ${throwable.code()}, Msg ${throwable.message()}"
+                        reason, throwable.code(), "Http Code ${throwable.code()}, Msg ${throwable.message()}"
                     ))
                 }
                 is UnknownHostException, is ConnectException, is SocketException -> {
                     Result.failure(ApiException(
                         ApiException.Reason.CONNECTION_ERROR,
+                        null,
                         "Poor Internet Connection or Server problem, Msg ${throwable.message}"
                     ))
                 }
                 else -> {
                     Result.failure(ApiException(
-                        ApiException.Reason.OTHER, "Other causes, Msg ${throwable.message}"
+                        ApiException.Reason.OTHER, null, "Other causes, Msg ${throwable.message}"
                     ))
                 }
             }
