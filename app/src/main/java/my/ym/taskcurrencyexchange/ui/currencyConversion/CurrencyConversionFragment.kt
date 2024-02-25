@@ -7,7 +7,6 @@ import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import my.ym.taskcurrencyexchange.R
 import my.ym.taskcurrencyexchange.databinding.FragmentCurrencyConversionBinding
-import my.ym.taskcurrencyexchange.extensions.executeRetryAbleActionOrGoBack
 import my.ym.taskcurrencyexchange.helperTypes.BaseFragment
 import my.ym.taskcurrencyexchange.helperTypes.NonFilterArrayAdapter
 import my.ym.taskcurrencyexchange.models.TwoCurrenciesConversion
@@ -35,15 +34,7 @@ class CurrencyConversionFragment : BaseFragment<FragmentCurrencyConversionBindin
 
 		// Get All Symbols
 		if (viewModel.currenciesSymbols.isEmpty()) {
-			executeRetryAbleActionOrGoBack(
-				action = {
-					viewModel.repoSymbols.getAllCurrenciesSymbols()
-				}
-			) { response ->
-				viewModel.currenciesSymbols = response?.symbols.orEmpty().keys.toList()
-
-				performAfterGettingCurrencies()
-			}
+			viewModel.fetchAllCurrencies(this, ::performAfterGettingCurrencies)
 		}else {
 			performAfterGettingCurrencies()
 		}

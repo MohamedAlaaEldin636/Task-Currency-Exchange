@@ -21,7 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CurrencyConversionViewModel @Inject constructor(
 	application: Application,
-	val repoSymbols: RepoSymbols,
+	private val repoSymbols: RepoSymbols,
 	private val repoConversions: RepoConversions,
 ) : AndroidViewModel(application) {
 
@@ -42,6 +42,18 @@ class CurrencyConversionViewModel @Inject constructor(
 	}
 	val targetValue = twoCurrenciesConversion.map {
 		it?.targetValue?.toIntIfNoFractionsOrThis()?.toString().orEmpty()
+	}
+
+	fun fetchAllCurrencies(fragment: CurrencyConversionFragment, onSuccess: () -> Unit) {
+		fragment.executeRetryAbleActionOrGoBack(
+			action = {
+				repoSymbols.getAllCurrenciesSymbols()
+			}
+		) { response ->
+			currenciesSymbols = response?.symbols.orEmpty().keys.toList()
+
+			onSuccess()
+		}
 	}
 
 	fun afterChange(view: View, changeType: CurrencyConversionFragment.ChangeType) {
