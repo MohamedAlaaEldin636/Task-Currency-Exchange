@@ -7,4 +7,9 @@
     </style>
 
     <style name="Theme.TaskCurrencyExchange" parent="Base.Theme.TaskCurrencyExchange" />
+
+    <!-- After digging in Toolbar.setup with nav controller found out below is where the color is fetched isa. -->
+    <style name="ToolbarDrawerArrowToggle" parent="@style/Base.Widget.AppCompat.DrawerArrowToggle">
+        <item name="android:textColorSecondary">@color/white</item>
+    </style>
 </resources>

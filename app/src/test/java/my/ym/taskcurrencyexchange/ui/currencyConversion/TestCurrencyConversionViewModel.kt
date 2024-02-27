@@ -65,7 +65,7 @@ class TestCurrencyConversionViewModel {
 				0.0,
 			)
 
-			viewModel.calculateConversionBasedOnBaseChange(it, true)
+			viewModel.calculateConversionChange(it, true)
 
 			assert(viewModel.twoCurrenciesConversion.value?.targetValue == baseValue)
 		}
@@ -85,7 +85,7 @@ class TestCurrencyConversionViewModel {
 				0.0,
 			)
 
-			viewModel.calculateConversionBasedOnBaseChange(it, true)
+			viewModel.calculateConversionChange(it, true)
 
 			val result = RepoImplSymbolsFake.RATIO_CONVERSION_EGP_TO_USD.times(
 				baseValue

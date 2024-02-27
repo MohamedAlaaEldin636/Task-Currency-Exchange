@@ -18,7 +18,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object OkHttpModule {
 
-    private const val TIMEOUT_IN_SEC = 10L
+    private const val TIMEOUT_IN_SEC = 15L
 
     private const val HEADER_KEY_API_KEY = "apikey"
 

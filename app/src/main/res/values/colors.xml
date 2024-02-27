@@ -7,4 +7,6 @@
     <color name="dialog_background">#33FFFFFF</color>
     <color name="error">#d32f2f</color>
     <color name="success">#388e3c</color>
+    <color name="scrim_white">#BFFFFFFF</color>
+    <color name="divider_color">#DDDDDD</color>
 </resources>

@@ -223,6 +223,52 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+
+            android:background="@color/scrim_white"
+
+            android:visibility="@{viewModel.showLoadingForBaseValue,default=gone}"
+
+            app:layout_constraintEnd_toEndOf="@id/baseValueTextInputLayout"
+            app:layout_constraintTop_toTopOf="@id/baseValueTextInputLayout"
+            app:layout_constraintBottom_toBottomOf="@id/baseValueTextInputLayout"
+            app:layout_constraintStart_toStartOf="@id/baseValueTextInputLayout"/>
+        <ProgressBar
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+
+            android:visibility="@{viewModel.showLoadingForBaseValue,default=gone}"
+
+            app:layout_constraintEnd_toEndOf="@id/baseValueTextInputLayout"
+            app:layout_constraintTop_toTopOf="@id/baseValueTextInputLayout"
+            app:layout_constraintBottom_toBottomOf="@id/baseValueTextInputLayout"
+            app:layout_constraintStart_toStartOf="@id/baseValueTextInputLayout"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+
+            android:background="@color/scrim_white"
+
+            android:visibility="@{viewModel.showLoadingForTargetValue,default=gone}"
+
+            app:layout_constraintEnd_toEndOf="@id/targetValueTextInputLayout"
+            app:layout_constraintTop_toTopOf="@id/targetValueTextInputLayout"
+            app:layout_constraintBottom_toBottomOf="@id/targetValueTextInputLayout"
+            app:layout_constraintStart_toStartOf="@id/targetValueTextInputLayout"/>
+        <ProgressBar
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+
+            android:visibility="@{viewModel.showLoadingForTargetValue,default=gone}"
+
+            app:layout_constraintEnd_toEndOf="@id/targetValueTextInputLayout"
+            app:layout_constraintTop_toTopOf="@id/targetValueTextInputLayout"
+            app:layout_constraintBottom_toBottomOf="@id/targetValueTextInputLayout"
+            app:layout_constraintStart_toStartOf="@id/targetValueTextInputLayout"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

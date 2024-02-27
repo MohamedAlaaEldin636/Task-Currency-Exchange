@@ -12,5 +12,28 @@
         android:name="my.ym.taskcurrencyexchange.ui.currencyConversion.CurrencyConversionFragment"
         android:label="@string/currency_conversion"
         tools:layout="@layout/fragment_currency_conversion" />
+    <fragment
+        android:id="@+id/currencyDetailsFragment"
+        android:name="my.ym.taskcurrencyexchange.ui.currencyDetails.CurrencyDetailsFragment"
+        android:label="@string/currency_details"
+        tools:layout="@layout/fragment_currency_details">
+        <argument
+            android:name="baseCurrency"
+            app:argType="string" />
+        <argument
+            android:name="baseValue"
+            app:argType="string" />
+        <argument
+            android:name="targetCurrency"
+            app:argType="string" />
+        <argument
+            android:name="targetValue"
+            app:argType="string"/>
+        <deepLink
+            android:id="@+id/deepLink"
+            android:autoVerify="true"
+            app:uri="fragment-dest://my.ym.taskcurrencyexchange.currency.details/{baseCurrency}/{baseValue}/{targetCurrency}/{targetValue}"
+            tools:targetApi="m" />
+    </fragment>
 
 </navigation>

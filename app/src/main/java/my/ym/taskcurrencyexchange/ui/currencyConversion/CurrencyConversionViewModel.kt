@@ -5,7 +5,11 @@ import android.view.View
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
+import androidx.navigation.findNavController
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import my.ym.taskcurrencyexchange.R
 import my.ym.taskcurrencyexchange.data.remote.currenciesConversion.RepoConversions
 import my.ym.taskcurrencyexchange.data.remote.currenciesSymbols.RepoSymbols
 import my.ym.taskcurrencyexchange.databinding.FragmentCurrencyConversionBinding
@@ -16,6 +20,8 @@ import my.ym.taskcurrencyexchange.extensions.orZero
 import my.ym.taskcurrencyexchange.extensions.toIntIfNoFractionsOrThis
 import my.ym.taskcurrencyexchange.extensions.toast
 import my.ym.taskcurrencyexchange.models.TwoCurrenciesConversion
+import my.ym.taskcurrencyexchange.models.orEmpty
+import my.ym.taskcurrencyexchange.ui.currencyDetails.CurrencyDetailsFragment
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,6 +49,11 @@ class CurrencyConversionViewModel @Inject constructor(
 	val targetValue = twoCurrenciesConversion.map {
 		it?.targetValue?.toIntIfNoFractionsOrThis()?.toString().orEmpty()
 	}
+
+	val showLoadingForBaseValue = MutableLiveData(false)
+	val showLoadingForTargetValue = MutableLiveData(false)
+
+	private var jobOfCalculateConversion: Job? = null
 
 	fun fetchAllCurrencies(fragment: CurrencyConversionFragment, onSuccess: () -> Unit) {
 		fragment.executeRetryAbleActionOrGoBack(
@@ -113,7 +124,7 @@ class CurrencyConversionViewModel @Inject constructor(
 
 		twoCurrenciesConversion.value = newTwoCurrenciesConversion
 
-		calculateConversionBasedOnBaseChange(fragment, isBaseChangedNotTarget)
+		calculateConversionChange(fragment, isBaseChangedNotTarget)
 	}
 
 	fun swapTargetAndBaseCurrencies(view: View) {
@@ -126,7 +137,7 @@ class CurrencyConversionViewModel @Inject constructor(
 			)
 		}
 
-		calculateConversionBasedOnBaseChange(
+		calculateConversionChange(
 			fragment,
 			true
 		)
@@ -141,26 +152,45 @@ class CurrencyConversionViewModel @Inject constructor(
 			)
 		}
 
-		calculateConversionBasedOnBaseChange(
+		calculateConversionChange(
 			fragment,
 			true
 		)
 	}
 
 	fun goToDetailsScreen(view: View) {
-		view.context?.toast("Not yet implemented isa.")
+		val context = view.context ?: return
 
-		//TODO("Not yet implemented isa.")
+		if (twoCurrenciesConversion.value?.baseValue == null
+			&& twoCurrenciesConversion.value?.targetValue == null) {
+			view.context?.toast(context.getString(R.string.you_must_select_either_base_value_or_target_value))
+
+			return
+		}
+
+		if (showLoadingForBaseValue.value == true || showLoadingForTargetValue.value == true) {
+			jobOfCalculateConversion?.cancel()
+		}
+
+		CurrencyDetailsFragment.launch(
+			view.findNavController(),
+			twoCurrenciesConversion.value.orEmpty()
+		)
 	}
 
 	/**
+	 * - VIP Note, I know I can just use the ratio API and then use math in case of no change for
+	 * the currencies & even add caching in case returned to same currencies, However since
+	 * currency conversion is sensitive and might change in any second it's better to keep
+	 * calling api even on a value change without currency one isa.
+	 *
 	 * - You should make changes to [twoCurrenciesConversion] before calling this.
 	 *
 	 * @param [isBaseChangedNotTarget] if `true` means you want to calculate based on base value,
 	 * so you changed base value, Otherwise means you just changed target value and want to
 	 * calculate corresponding base value isa.
 	 */
-	fun calculateConversionBasedOnBaseChange(
+	fun calculateConversionChange(
 		fragment: CurrencyConversionFragment,
 		isBaseChangedNotTarget: Boolean,
 	) {
@@ -197,8 +227,29 @@ class CurrencyConversionViewModel @Inject constructor(
 				}
 			}
 			else -> {
-				fragment.executeRetryAbleActionOrGoBack(
+				// Used below approach to facilitate changes for user instead of blocking him/her
+				// for each edit of a digit
+				jobOfCalculateConversion?.cancel()
+				jobOfCalculateConversion = fragment.executeRetryAbleActionOrGoBack(
+					onShowLoading = {
+						if (isBaseChangedNotTarget) {
+							showLoadingForTargetValue.value = true
+						}else {
+							showLoadingForBaseValue.value = true
+						}
+					},
+					onHideLoading = {
+						if (isBaseChangedNotTarget) {
+							showLoadingForTargetValue.postValue(false)
+						}else {
+							showLoadingForBaseValue.postValue(false)
+						}
+					},
 					action = {
+						// wait small time in case multiple calls so we don't call api multiple
+						// times unnecessarily
+						delay(300)
+
 						if (isBaseChangedNotTarget) {
 							repoConversions.convertCurrencyValue(
 								twoCurrenciesConversion.baseCurrency,

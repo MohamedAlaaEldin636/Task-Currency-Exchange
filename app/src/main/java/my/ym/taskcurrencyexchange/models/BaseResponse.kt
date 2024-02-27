@@ -1,6 +1,8 @@
 package my.ym.taskcurrencyexchange.models
 
 open class BaseResponse(
-	val success: Boolean? = null,
+	var success: Boolean? = null,
 	val error: ErrorResponse? = null,
 )
+
+fun <T : BaseResponse> T.applySuccess(): T = apply { success = true }

@@ -18,4 +18,12 @@
     <string name="target_currency">Target Currency</string>
     <string name="details">Details</string>
     <string name="timeout_error_due_to_poor_internet_connection_check_connection_try_again"><![CDATA[Timeout error due to Poor Internet Connection,\nCheck Connection & try again]]></string>
+    <string name="you_must_select_either_base_value_or_target_value">You must select either Base Value or Target Value.</string>
+    <string name="currency_details">Currency Details</string>
+    <string name="loading_ellipsis">Loading…</string>
+    <string name="conversion_of_var_var_to_var">Conversion of %1$s %2$s to %3$s</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="last_three_days">Last Three Days</string>
+    <string name="other_currencies">Other Currencies</string>
 </resources>

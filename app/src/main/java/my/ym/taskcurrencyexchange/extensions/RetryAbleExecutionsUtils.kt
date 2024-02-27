@@ -1,8 +1,11 @@
 package my.ym.taskcurrencyexchange.extensions
 
 import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import my.ym.taskcurrencyexchange.R
 import my.ym.taskcurrencyexchange.helperTypes.ApiException
@@ -25,15 +28,15 @@ private enum class NegativeAction {
 fun <T : BaseResponse> BaseFragment<*>.executeRetryAbleActionOrGoBack(
 	action: suspend () -> Result<T>,
 	scope: CoroutineScope = lifecycleScope,
-	showLoading: Boolean = true,
-	hideLoading: Boolean = true,
+	onShowLoading: (() -> Unit)? = null,
+	onHideLoading: (() -> Unit)? = null,
 	onError: (Result<T>) -> Unit = {},
 	onSuccess: (T?) -> Unit,
-) = executeRetryAbleActionOrEitherCancelOrGoBack(
+): Job = executeRetryAbleActionOrEitherCancelOrGoBack(
 	action,
 	NegativeAction.GO_BACK,
-	showLoading,
-	hideLoading,
+	onShowLoading,
+	onHideLoading,
 	scope,
 	onError,
 	onSuccess
@@ -45,15 +48,15 @@ fun <T : BaseResponse> BaseFragment<*>.executeRetryAbleActionOrGoBack(
 fun <T : BaseResponse> BaseFragment<*>.executeRetryAbleActionOrCancel(
 	action: suspend () -> Result<T>,
 	scope: CoroutineScope = lifecycleScope,
-	showLoading: Boolean = true,
-	hideLoading: Boolean = true,
+	onShowLoading: (() -> Unit)? = null,
+	onHideLoading: (() -> Unit)? = null,
 	onError: (Result<T>) -> Unit = {},
 	onSuccess: (T?) -> Unit,
-) = executeRetryAbleActionOrEitherCancelOrGoBack(
+): Job = executeRetryAbleActionOrEitherCancelOrGoBack(
 	action,
 	NegativeAction.CANCEL,
-	showLoading,
-	hideLoading,
+	onShowLoading,
+	onHideLoading,
 	scope,
 	onError,
 	onSuccess
@@ -62,20 +65,22 @@ fun <T : BaseResponse> BaseFragment<*>.executeRetryAbleActionOrCancel(
 private fun <T : BaseResponse> BaseFragment<*>.executeRetryAbleActionOrEitherCancelOrGoBack(
 	action: suspend () -> Result<T>,
 	negativeAction: NegativeAction,
-	performShowLoading: Boolean,
-	performHideLoading: Boolean,
+	onShowLoading: (() -> Unit)? = null,
+	onHideLoading: (() -> Unit)? = null,
 	scope: CoroutineScope,
 	onError: (Result<T>) -> Unit,
 	onSuccess: (T?) -> Unit,
-) {
+): Job {
 	val hideLoading: () -> Unit = {
-		if (performHideLoading) {
+		if (onHideLoading == null) {
 			dismissGlobalLoadingDialog()
+		}else {
+			onHideLoading()
 		}
 	}
 
 	val showLoading: (CoroutineScope) -> Unit = {
-		if (performShowLoading) {
+		if (onShowLoading == null) {
 			showGlobalLoadingDialog {
 				it.cancel()
 
@@ -92,6 +97,8 @@ private fun <T : BaseResponse> BaseFragment<*>.executeRetryAbleActionOrEitherCan
 					}
 				}
 			}
+		}else {
+			onShowLoading()
 		}
 	}
 
@@ -102,7 +109,9 @@ private fun <T : BaseResponse> BaseFragment<*>.executeRetryAbleActionOrEitherCan
 			when (val exception = result.exceptionOrNull()) {
 				is ApiException -> {
 					buildString {
-						append("Code ${exception.code}, ")
+						if (exception.code != null) {
+							append("Code ${exception.code}, ")
+						}
 
 						when (exception.reason) {
 							ApiException.Reason.CLIENT_ERROR -> {
@@ -151,7 +160,7 @@ private fun <T : BaseResponse> BaseFragment<*>.executeRetryAbleActionOrEitherCan
 					}
 				) {
 					executeRetryAbleActionOrEitherCancelOrGoBack(
-						action, negativeAction, performShowLoading, performHideLoading, scope, onError, onSuccess
+						action, negativeAction, onShowLoading, onHideLoading, scope, onError, onSuccess
 					)
 				}
 			}
@@ -163,14 +172,14 @@ private fun <T : BaseResponse> BaseFragment<*>.executeRetryAbleActionOrEitherCan
 					}
 				) {
 					executeRetryAbleActionOrEitherCancelOrGoBack(
-						action, negativeAction, performShowLoading, performHideLoading, scope, onError, onSuccess
+						action, negativeAction, onShowLoading, onHideLoading, scope, onError, onSuccess
 					)
 				}
 			}
 		}
 	}
 
-	executeRetryAbleActionGeneral(
+	return executeRetryAbleActionGeneral(
 		showLoading, hideLoading, scope, action, onErrorAdditionalImpl, onSuccess
 	)
 }
@@ -182,12 +191,18 @@ private fun <T : BaseResponse> executeRetryAbleActionGeneral(
 	action: suspend () -> Result<T>,
 	onError: (Result<T>) -> Unit,
 	onSuccess: (T?) -> Unit,
-) {
-	scope.launch {
+): Job {
+	return scope.launch {
 		kotlin.runCatching {
 			showLoading(this)
 			val value = action()
 			hideLoading()
+
+			if (isActive.not()) {
+				// Cancelled intentionally from [action] block isa.
+
+				return@launch
+			}
 
 			if (value.isSuccess) {
 				onSuccess(value.getOrNull())
@@ -195,7 +210,10 @@ private fun <T : BaseResponse> executeRetryAbleActionGeneral(
 				onError(value)
 			}
 		}.getOrElse {
-			onError(Result.failure(it))
+			// Cancelled intentionally from [action] block isa.
+			if (it !is CancellationException) {
+				onError(Result.failure(it))
+			}
 		}
 	}
 }

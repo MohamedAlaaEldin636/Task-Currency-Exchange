@@ -26,6 +26,10 @@
             tools:title="Title Here"
             app:titleTextColor="@color/white"
 
+            app:navigationIconTint="@color/white"
+
+            android:theme="@style/ToolbarDrawerArrowToggle"
+
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>

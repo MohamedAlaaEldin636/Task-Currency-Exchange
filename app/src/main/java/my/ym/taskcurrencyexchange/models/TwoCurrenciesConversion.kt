@@ -7,3 +7,7 @@ data class TwoCurrenciesConversion(
 	val targetCurrency: String,
 	val targetValue: Double?,
 )
+
+fun TwoCurrenciesConversion?.orEmpty() = this ?: TwoCurrenciesConversion(
+	"", null, "", null
+)

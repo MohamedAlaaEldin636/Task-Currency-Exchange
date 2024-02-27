@@ -58,7 +58,7 @@ class CurrencyConversionFragment : BaseFragment<FragmentCurrencyConversionBindin
 				)
 			}
 
-			viewModel.calculateConversionBasedOnBaseChange(this, true)
+			viewModel.calculateConversionChange(this, true)
 		}
 	}
 

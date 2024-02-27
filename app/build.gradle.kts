@@ -43,6 +43,9 @@ android {
 	compileOptions {
 		sourceCompatibility = JavaVersion.VERSION_1_8
 		targetCompatibility = JavaVersion.VERSION_1_8
+
+		// Flag to enable support for the new language APIs
+		isCoreLibraryDesugaringEnabled = true
 	}
 
 	kotlinOptions {
@@ -101,6 +104,12 @@ dependencies {
 
 	// Lottie Loader
 	implementation("com.airbnb.android:lottie:6.3.0")
+
+	// AnyChart
+	implementation("com.github.AnyChart:AnyChart-Android:1.1.5")
+
+	// For AGP 7.4+, For java.time APIs isa, check -> https://developer.android.com/studio/write/java8-support#library-desugaring
+	coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
 
 	// ---- Testing ---- //
 
