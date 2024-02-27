@@ -26,7 +26,6 @@ class CurrencyDetailsViewModel @Inject constructor(
 	/** Ex. list of -> Today - 50 */
 	val lastThreeDaysData = MutableLiveData<List<Pair<String, Double>>?>(null)
 
-	// todo remaining Other Currencies Conversions
 	/** Ex. list of -> 200 USD */
 	val otherCurrencies = MutableLiveData<List<Pair<String, Double>>?>(null)
 
@@ -72,7 +71,7 @@ class CurrencyDetailsViewModel @Inject constructor(
 
 				Pair(
 					key,
-					it.second[args.targetCurrency].orZero().times(baseValue)
+					it.second[args.targetCurrency].orZero()
 				)
 			}
 
@@ -86,7 +85,7 @@ class CurrencyDetailsViewModel @Inject constructor(
 					for (currency in (currenciesPopular - args.targetCurrency).take(10)) {
 						this += Pair(
 							currency,
-							it.second[currency].orZero().times(baseValue)
+							it.second[currency].orZero()
 						)
 					}
 				}

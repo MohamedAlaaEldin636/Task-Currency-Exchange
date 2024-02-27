@@ -1,7 +1,6 @@
 package my.ym.taskcurrencyexchange.data.remote.currenciesConversion
 
 import my.ym.taskcurrencyexchange.models.ResponseRatesOfCurrencies
-import timber.log.Timber
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -27,8 +26,6 @@ class GetRatesOfCurrenciesForLastNDays @Inject constructor(
 	): Result<ResponseRatesOfCurrencies> {
 		val todayAsEndDay = LocalDate.now()
 		val startDate = todayAsEndDay.minusDays(numOfDays.dec().toLong())
-
-		Timber.e("dwdew inner ch 1")
 
 		return repoConversions.getRatesOfCurrenciesForSpecificPeriod(
 			startDate,

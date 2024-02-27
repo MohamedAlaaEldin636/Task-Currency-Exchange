@@ -19,7 +19,11 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+
+            android:paddingTop="8dp"
+            android:paddingBottom="16dp"
+            android:clipToPadding="false">
 
             <TextView
                 android:id="@+id/titleTextView"
@@ -190,6 +194,50 @@
                 app:layout_constraintEnd_toEndOf="@id/recyclerViewLastDays"
                 app:layout_constraintTop_toTopOf="@id/recyclerViewLastDays"
                 app:layout_constraintBottom_toBottomOf="@id/recyclerViewLastDays"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewOtherCurrencies"
+
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="16dp"
+
+                android:scrollbars="horizontal"
+
+                app:spanCount="3"
+                tools:itemCount="6"
+                tools:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
+                tools:listitem="@layout/item_text_scrollable"
+                tools:orientation="vertical"
+
+                android:background="@drawable/round_rect_8"
+                android:elevation="3dp"
+
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:clipToPadding="false"
+
+                app:layout_constraintStart_toStartOf="@id/otherCurrenciesTitleTextView"
+                app:layout_constraintEnd_toEndOf="@id/otherCurrenciesTitleTextView"
+                app:layout_constraintTop_toBottomOf="@id/otherCurrenciesTitleTextView"/>
+            <View
+                android:layout_width="1dp"
+                android:layout_height="0dp"
+
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+
+                android:background="@color/divider_color"
+
+                android:elevation="3dp"
+
+                app:layout_constraintHorizontal_bias="0.33"
+
+                app:layout_constraintStart_toStartOf="@id/recyclerViewOtherCurrencies"
+                app:layout_constraintEnd_toEndOf="@id/recyclerViewOtherCurrencies"
+                app:layout_constraintTop_toTopOf="@id/recyclerViewOtherCurrencies"
+                app:layout_constraintBottom_toBottomOf="@id/recyclerViewOtherCurrencies"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

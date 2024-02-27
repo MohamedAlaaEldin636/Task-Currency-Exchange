@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
-import androidx.recyclerview.widget.GridLayoutManager
 import com.anychart.AnyChart
 import com.anychart.chart.common.dataentry.ValueDataEntry
 import com.anychart.chart.common.listener.Event
@@ -15,6 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import my.ym.taskcurrencyexchange.R
 import my.ym.taskcurrencyexchange.databinding.FragmentCurrencyDetailsBinding
 import my.ym.taskcurrencyexchange.extensions.navDeepLinkWithOptionsSlidingToFragment
+import my.ym.taskcurrencyexchange.extensions.setupWithAdapter
 import my.ym.taskcurrencyexchange.extensions.toIntIfNoFractionsOrThis
 import my.ym.taskcurrencyexchange.helperTypes.BaseFragment
 import my.ym.taskcurrencyexchange.models.TwoCurrenciesConversion
@@ -44,6 +44,8 @@ class CurrencyDetailsFragment : BaseFragment<FragmentCurrencyDetailsBinding>() {
 
 	private val adapterLastDays = RVItemTextScrollable()
 
+	private val adapterOtherCountries = RVItemTextScrollable()
+
 	override fun getLayoutRes(): Int = R.layout.fragment_currency_details
 
 	override fun setBindingVariables() {
@@ -52,13 +54,26 @@ class CurrencyDetailsFragment : BaseFragment<FragmentCurrencyDetailsBinding>() {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		// Setup views
-		binding?.recyclerViewLastDays?.layoutManager = GridLayoutManager(
-			requireContext(),
+		binding?.recyclerViewLastDays?.setupWithAdapter(
+			adapterLastDays,
+			true,
 			2,
-			GridLayoutManager.VERTICAL,
-			false
+			requireContext(),
 		)
-		binding?.recyclerViewLastDays?.adapter = adapterLastDays
+
+		binding?.recyclerViewOtherCurrencies?.setupWithAdapter(
+			adapterOtherCountries,
+			true,
+			3,
+			requireContext(),
+			onGridLayoutSpanSizeLookup = { index ->
+				if (index % 2 == 0) {
+					1
+				}else {
+					2
+				}
+			}
+		)
 
 		// Fetch data
 		viewModel.fetchRatesForCurrencies(this)
@@ -75,6 +90,18 @@ class CurrencyDetailsFragment : BaseFragment<FragmentCurrencyDetailsBinding>() {
 				adapterLastDays.submitList(list)
 
 				setupChart(it.orEmpty())
+			}
+		}
+
+		viewModel.otherCurrencies.observe(viewLifecycleOwner) {
+			if (it.isNullOrEmpty().not()) {
+				val list = buildList {
+					for (item in it.orEmpty()) {
+						add(item.first)
+						add(item.second.toIntIfNoFractionsOrThis().toString())
+					}
+				}
+				adapterOtherCountries.submitList(list)
 			}
 		}
 	}
