@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import my.ym.taskcurrencyexchange.R
-import my.ym.taskcurrencyexchange.data.remote.currenciesConversion.ConvertToSeveralCurrenciesForLastThreeDaysUseCase
+import my.ym.taskcurrencyexchange.domain.currenciesConversion.ConvertToSeveralCurrenciesForLastThreeDaysUseCase
 import my.ym.taskcurrencyexchange.extensions.convertToFormatYYYYMMDD
 import my.ym.taskcurrencyexchange.extensions.myApp
 import my.ym.taskcurrencyexchange.extensions.orZero

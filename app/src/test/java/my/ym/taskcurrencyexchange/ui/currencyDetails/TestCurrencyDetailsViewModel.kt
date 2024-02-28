@@ -9,8 +9,8 @@ import my.ym.taskcurrencyexchange.data.FakeRepoImplConversions
 import org.junit.Before
 import my.ym.taskcurrencyexchange.data.FakeRepoImplSymbols
 import org.junit.Test
-import my.ym.taskcurrencyexchange.data.remote.currenciesConversion.ConvertToSeveralCurrenciesForLastThreeDaysUseCase
-import my.ym.taskcurrencyexchange.data.remote.currenciesConversion.GetRatesOfCurrenciesForLastNDaysUseCase
+import my.ym.taskcurrencyexchange.domain.currenciesConversion.ConvertToSeveralCurrenciesForLastThreeDaysUseCase
+import my.ym.taskcurrencyexchange.domain.currenciesConversion.GetRatesOfCurrenciesForLastNDaysUseCase
 import org.junit.Assert.assertEquals
 
 @RunWith(RobolectricTestRunner::class)

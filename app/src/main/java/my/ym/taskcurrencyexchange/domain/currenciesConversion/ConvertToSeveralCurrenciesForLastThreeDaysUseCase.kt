@@ -1,5 +1,6 @@
-package my.ym.taskcurrencyexchange.data.remote.currenciesConversion
+package my.ym.taskcurrencyexchange.domain.currenciesConversion
 
+import my.ym.taskcurrencyexchange.data.remote.currenciesConversion.RepoConversions
 import my.ym.taskcurrencyexchange.extensions.LocalDateTimeUtils
 import my.ym.taskcurrencyexchange.extensions.orZero
 import my.ym.taskcurrencyexchange.extensions.round
