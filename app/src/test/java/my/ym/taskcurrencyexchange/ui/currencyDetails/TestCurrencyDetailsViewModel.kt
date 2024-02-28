@@ -1,27 +1,16 @@
 package my.ym.taskcurrencyexchange.ui.currencyDetails
 
-import androidx.core.os.bundleOf
-import androidx.lifecycle.Lifecycle
-import androidx.navigation.fragment.NavHostFragment
-import androidx.test.core.app.ActivityScenario
 import my.ym.taskcurrencyexchange.MyApp
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
-import my.ym.taskcurrencyexchange.MainActivity
-import my.ym.taskcurrencyexchange.R
 import my.ym.taskcurrencyexchange.data.FakeRepoImplConversions
 import org.junit.Before
 import my.ym.taskcurrencyexchange.data.FakeRepoImplSymbols
 import org.junit.Test
 import my.ym.taskcurrencyexchange.data.remote.currenciesConversion.ConvertToSeveralCurrenciesForLastThreeDaysUseCase
 import my.ym.taskcurrencyexchange.data.remote.currenciesConversion.GetRatesOfCurrenciesForLastNDaysUseCase
-import my.ym.taskcurrencyexchange.extensions.navDeepLinkWithOptionsSlidingToFragment
-import my.ym.taskcurrencyexchange.models.TwoCurrenciesConversion
-import my.ym.taskcurrencyexchange.ui.currencyConversion.CurrencyConversionFragment
 import org.junit.Assert.assertEquals
 
 @RunWith(RobolectricTestRunner::class)
