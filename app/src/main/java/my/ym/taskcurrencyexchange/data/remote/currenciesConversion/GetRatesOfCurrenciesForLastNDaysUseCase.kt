@@ -11,7 +11,7 @@ import javax.inject.Inject
  * - Side Note I know you know that link I'm just add nt the comment to tell you that I do as well
  * know it.
  */
-class GetRatesOfCurrenciesForLastNDays @Inject constructor(
+class GetRatesOfCurrenciesForLastNDaysUseCase @Inject constructor(
 	private val repoConversions: RepoConversions
 ) {
 

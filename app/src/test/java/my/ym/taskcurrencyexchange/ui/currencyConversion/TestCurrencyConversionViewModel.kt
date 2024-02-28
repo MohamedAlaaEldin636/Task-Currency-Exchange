@@ -7,9 +7,9 @@ import my.ym.taskcurrencyexchange.MyApp
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
-import my.ym.taskcurrencyexchange.data.RepoImplConversionsFake
+import my.ym.taskcurrencyexchange.data.FakeRepoImplConversions
 import org.junit.Before
-import my.ym.taskcurrencyexchange.data.RepoImplSymbolsFake
+import my.ym.taskcurrencyexchange.data.FakeRepoImplSymbols
 import org.junit.Test
 import androidx.test.core.app.ActivityScenario.launch
 import my.ym.taskcurrencyexchange.MainActivity
@@ -28,8 +28,8 @@ class TestCurrencyConversionViewModel {
 	fun setup() {
 		myApp = getApplicationContext()
 
-		val repoSymbols = RepoImplSymbolsFake.Success
-		val repoConversions = RepoImplConversionsFake.Success
+		val repoSymbols = FakeRepoImplSymbols.Success
+		val repoConversions = FakeRepoImplConversions.Success
 		viewModel = CurrencyConversionViewModel(
 			myApp,
 			repoSymbols,
@@ -59,9 +59,9 @@ class TestCurrencyConversionViewModel {
 			val baseValue = 1.0
 
 			viewModel.twoCurrenciesConversion.value = TwoCurrenciesConversion(
-				RepoImplSymbolsFake.CURRENCY_EGP,
+				FakeRepoImplSymbols.CURRENCY_EGP,
 				baseValue,
-				RepoImplSymbolsFake.CURRENCY_EGP,
+				FakeRepoImplSymbols.CURRENCY_EGP,
 				0.0,
 			)
 
@@ -79,15 +79,15 @@ class TestCurrencyConversionViewModel {
 			val baseValue = 1.0
 
 			viewModel.twoCurrenciesConversion.value = TwoCurrenciesConversion(
-				RepoImplSymbolsFake.CURRENCY_EGP,
+				FakeRepoImplSymbols.CURRENCY_EGP,
 				baseValue,
-				RepoImplSymbolsFake.CURRENCY_USD,
+				FakeRepoImplSymbols.CURRENCY_USD,
 				0.0,
 			)
 
 			viewModel.calculateConversionChange(it, true)
 
-			val result = RepoImplSymbolsFake.RATIO_CONVERSION_EGP_TO_USD.times(
+			val result = FakeRepoImplSymbols.RATIO_CONVERSION_EGP_TO_USD.times(
 				baseValue
 			)
 

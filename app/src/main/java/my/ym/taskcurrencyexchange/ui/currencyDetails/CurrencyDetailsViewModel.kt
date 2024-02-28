@@ -5,7 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import my.ym.taskcurrencyexchange.R
-import my.ym.taskcurrencyexchange.data.remote.currenciesConversion.ConvertToSeveralCurrenciesForLastThreeDays
+import my.ym.taskcurrencyexchange.data.remote.currenciesConversion.ConvertToSeveralCurrenciesForLastThreeDaysUseCase
 import my.ym.taskcurrencyexchange.extensions.convertToFormatYYYYMMDD
 import my.ym.taskcurrencyexchange.extensions.executeRetryAbleActionOrGoBack
 import my.ym.taskcurrencyexchange.extensions.orZero
@@ -18,7 +18,7 @@ import javax.inject.Inject
 class CurrencyDetailsViewModel @Inject constructor(
 	application: Application,
 	private val args: CurrencyDetailsFragmentArgs,
-	private val convertToSeveralCurrenciesForLastThreeDays: ConvertToSeveralCurrenciesForLastThreeDays,
+	private val convertToSeveralCurrenciesForLastThreeDaysUseCase: ConvertToSeveralCurrenciesForLastThreeDaysUseCase,
 ) : AndroidViewModel(application) {
 
 	val title = MutableLiveData(application.getString(R.string.loading_ellipsis))
@@ -36,7 +36,7 @@ class CurrencyDetailsViewModel @Inject constructor(
 	) {
 		fragment.executeRetryAbleActionOrGoBack(
 			action = {
-				convertToSeveralCurrenciesForLastThreeDays(
+				convertToSeveralCurrenciesForLastThreeDaysUseCase(
 					args.baseCurrency,
 					args.baseValue.toDoubleOrNull(),
 					args.targetCurrency,

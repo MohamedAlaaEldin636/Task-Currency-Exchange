@@ -7,8 +7,8 @@ import my.ym.taskcurrencyexchange.models.ResponseMultiConversionsSeveralDays
 import my.ym.taskcurrencyexchange.models.applySuccess
 import javax.inject.Inject
 
-class ConvertToSeveralCurrenciesForLastThreeDays @Inject constructor(
-	private val getRatesOfCurrenciesForLastNDays: GetRatesOfCurrenciesForLastNDays,
+class ConvertToSeveralCurrenciesForLastThreeDaysUseCase @Inject constructor(
+	private val getRatesOfCurrenciesForLastNDaysUseCase: GetRatesOfCurrenciesForLastNDaysUseCase,
 	private val repoConversions: RepoConversions,
 ) {
 
@@ -41,7 +41,7 @@ class ConvertToSeveralCurrenciesForLastThreeDays @Inject constructor(
 			)
 		}
 
-		val result = getRatesOfCurrenciesForLastNDays(
+		val result = getRatesOfCurrenciesForLastNDaysUseCase(
 			baseCurrency,
 			targetCurrencies,
 			3
