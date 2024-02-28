@@ -10,3 +10,11 @@
 - Used Kotlin Coroutines for asynchronous operations.
 
 - Used [Retrofit](https://github.com/square/retrofit) client for API communication.
+
+# Images from the App
+
+<img src="currency_conversion_portrait.png" width="300"/> <img src="currency_details_portrait.png" width="300"/>
+
+<img src="currency_conversion_landscape.png" width="600"/> 
+
+<img src="currency_details_landscape.png" width="600"/>
