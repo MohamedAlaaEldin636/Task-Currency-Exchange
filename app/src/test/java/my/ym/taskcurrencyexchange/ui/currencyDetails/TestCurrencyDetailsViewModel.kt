@@ -81,4 +81,46 @@ class TestCurrencyDetailsViewModel {
 		assertEquals(expectedConvertedValue, convertedValue, 0.0)
 	}
 
+	@Test
+	fun conversionWithoutBaseValue() = runTest {
+		val baseCurrency = FakeRepoImplSymbols.CURRENCY_EGP
+		val targetCurrency = FakeRepoImplSymbols.CURRENCY_USD
+		val targetValue = 4.0
+
+		val viewModel = CurrencyDetailsViewModel(
+			myApp,
+			CurrencyDetailsFragmentArgs(
+				baseCurrency,
+				"",
+				targetCurrency,
+				targetValue.toString()
+			),
+			convertToSeveralCurrenciesForLastThreeDaysUseCase
+		)
+
+		viewModel.fetchRatesForCurrencies()
+
+		val response = convertToSeveralCurrenciesForLastThreeDaysUseCase(
+			baseCurrency,
+			null,
+			targetCurrency,
+			targetValue,
+			listOf(targetCurrency)
+		).getOrNull()!!
+
+		assertEquals(
+			response.baseValue,
+			FakeRepoImplSymbols.getRateOfConversion(
+				targetCurrency, baseCurrency
+			).times(targetValue)
+		)
+
+		assertEquals(response.rates?.size, 3)
+
+		assertEquals(viewModel.lastThreeDaysData.value?.size, 3)
+
+		val convertedValue = viewModel.lastThreeDaysData.value.orEmpty().first().second
+		assertEquals(targetValue, convertedValue, 0.0)
+	}
+
 }
