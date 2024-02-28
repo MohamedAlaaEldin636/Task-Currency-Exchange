@@ -1,11 +1,9 @@
 package my.ym.taskcurrencyexchange.di.modules
 
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.components.SingletonComponent
 import my.ym.taskcurrencyexchange.BuildConfig
 import my.ym.taskcurrencyexchange.extensions.GsonUtils

@@ -1,23 +1,8 @@
 package my.ym.taskcurrencyexchange.extensions
 
-import android.app.Dialog
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.InsetDrawable
-import android.view.KeyEvent
-import android.view.ViewGroup
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.toDrawable
-import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import my.ym.taskcurrencyexchange.R
-import my.ym.taskcurrencyexchange.databinding.DialogGlobalLoadingBinding
-import my.ym.taskcurrencyexchange.databinding.DialogRetryErrorHandlingBinding
 import my.ym.taskcurrencyexchange.helperTypes.BaseActivity
 import my.ym.taskcurrencyexchange.helperTypes.BaseFragment
-import kotlin.math.roundToInt
 
 fun BaseFragment<*>?.dismissGlobalLoadingDialog() {
 	(this?.activity as? BaseActivity<*>)?.dismissGlobalLoadingDialog()

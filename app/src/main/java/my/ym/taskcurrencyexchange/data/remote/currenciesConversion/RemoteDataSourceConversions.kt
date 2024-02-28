@@ -1,12 +1,8 @@
 package my.ym.taskcurrencyexchange.data.remote.currenciesConversion
 
 import my.ym.taskcurrencyexchange.extensions.convertToFormatYYYYMMDD
-import my.ym.taskcurrencyexchange.extensions.minLengthZerosPrefix
 import my.ym.taskcurrencyexchange.helperTypes.BaseRemoteDataSource
-import my.ym.taskcurrencyexchange.models.ResponseRatesOfCurrencies
-import retrofit2.http.Query
 import java.time.LocalDate
-import java.time.LocalTime
 import javax.inject.Inject
 import javax.inject.Singleton
 
