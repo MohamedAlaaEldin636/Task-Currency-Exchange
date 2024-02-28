@@ -32,7 +32,7 @@ object FakeRepoImplConversions {
 					&& toCurrency == FakeRepoImplSymbols.CURRENCY_USD -> {
 						Result.success(
 							ResponseConversion(
-								amountToConvert.times(FakeRepoImplSymbols.RATIO_CONVERSION_EGP_TO_USD),
+								FakeRepoImplSymbols.getRateOfConversion(fromCurrency, toCurrency).times(amountToConvert),
 								null,
 								null,
 								null,
@@ -54,7 +54,7 @@ object FakeRepoImplConversions {
 					&& toCurrency == FakeRepoImplSymbols.CURRENCY_EGP -> {
 						Result.success(
 							ResponseConversion(
-								amountToConvert.div(FakeRepoImplSymbols.RATIO_CONVERSION_EGP_TO_USD),
+								FakeRepoImplSymbols.getRateOfConversion(fromCurrency, toCurrency).times(amountToConvert),
 								null,
 								null,
 								null,

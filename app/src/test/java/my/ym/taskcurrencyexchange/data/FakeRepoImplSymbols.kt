@@ -9,7 +9,7 @@ object FakeRepoImplSymbols {
 	const val CURRENCY_USD = "USD"
 
 	/** This isn't true, just a fak data */
-	const val RATIO_CONVERSION_EGP_TO_USD = 2.0
+	private const val RATIO_CONVERSION_EGP_TO_USD = 2.0
 	private const val RATIO_CONVERSION_USD_TO_EGP = 1.div(RATIO_CONVERSION_EGP_TO_USD)
 
 	private const val RATIO_CONVERSION_EGP_TO_OTHER_CURRENCIES_EXCEPT_USD = 3.0

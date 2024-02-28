@@ -1,15 +1,15 @@
 package my.ym.taskcurrencyexchange.ui.currencyDetails
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import my.ym.taskcurrencyexchange.R
 import my.ym.taskcurrencyexchange.data.remote.currenciesConversion.ConvertToSeveralCurrenciesForLastThreeDaysUseCase
 import my.ym.taskcurrencyexchange.extensions.convertToFormatYYYYMMDD
-import my.ym.taskcurrencyexchange.extensions.executeRetryAbleActionOrGoBack
+import my.ym.taskcurrencyexchange.extensions.myApp
 import my.ym.taskcurrencyexchange.extensions.orZero
 import my.ym.taskcurrencyexchange.extensions.toIntIfNoFractionsOrThis
+import my.ym.taskcurrencyexchange.helperTypes.BaseAndroidViewModel
 import my.ym.taskcurrencyexchange.helperTypes.CurrencyUtils
 import java.time.LocalDate
 import javax.inject.Inject
@@ -19,7 +19,7 @@ class CurrencyDetailsViewModel @Inject constructor(
 	application: Application,
 	private val args: CurrencyDetailsFragmentArgs,
 	private val convertToSeveralCurrenciesForLastThreeDaysUseCase: ConvertToSeveralCurrenciesForLastThreeDaysUseCase,
-) : AndroidViewModel(application) {
+) : BaseAndroidViewModel(application) {
 
 	val title = MutableLiveData(application.getString(R.string.loading_ellipsis))
 
@@ -31,10 +31,8 @@ class CurrencyDetailsViewModel @Inject constructor(
 
 	private val currenciesPopular = CurrencyUtils.topPopular11Currencies()
 
-	fun fetchRatesForCurrencies(
-		fragment: CurrencyDetailsFragment,
-	) {
-		fragment.executeRetryAbleActionOrGoBack(
+	fun fetchRatesForCurrencies() {
+		executeRetryAbleActionOrGoBack(
 			action = {
 				convertToSeveralCurrenciesForLastThreeDaysUseCase(
 					args.baseCurrency,
@@ -51,11 +49,9 @@ class CurrencyDetailsViewModel @Inject constructor(
 		) { response ->
 			if (response == null) return@executeRetryAbleActionOrGoBack
 
-			val context = fragment.context ?: return@executeRetryAbleActionOrGoBack
-
 			val baseValue = response.baseValue.orZero()
 
-			title.value = context.getString(
+			title.value = myApp.getString(
 				R.string.conversion_of_var_var_to_var,
 				baseValue.toIntIfNoFractionsOrThis().toString(),
 				args.baseCurrency,
@@ -64,8 +60,8 @@ class CurrencyDetailsViewModel @Inject constructor(
 
 			lastThreeDaysData.value = response.rates?.map {
 				val key = when (it.first) {
-					LocalDate.now() -> context.getString(R.string.today)
-					LocalDate.now().minusDays(1) -> context.getString(R.string.yesterday)
+					LocalDate.now() -> myApp.getString(R.string.today)
+					LocalDate.now().minusDays(1) -> myApp.getString(R.string.yesterday)
 					else -> it.first.convertToFormatYYYYMMDD()
 				}
 

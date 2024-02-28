@@ -29,8 +29,6 @@ class TestCurrencyDetailsViewModel {
 
 	private lateinit var myApp: MyApp
 
-	private lateinit var scenarioMainActivity: ActivityScenario<MainActivity>
-
 	private lateinit var convertToSeveralCurrenciesForLastThreeDaysUseCase: ConvertToSeveralCurrenciesForLastThreeDaysUseCase
 
 	@Before
@@ -43,16 +41,26 @@ class TestCurrencyDetailsViewModel {
 			getRatesOfCurrenciesForLastNDaysUseCase,
 			repoConversions
 		)
-
-		scenarioMainActivity = ActivityScenario.launch(MainActivity::class.java)
-		scenarioMainActivity.moveToState(Lifecycle.State.RESUMED)
 	}
 
-	/*@Test
+	@Test
 	fun conversionWithoutTargetValue() = runTest {
 		val baseCurrency = FakeRepoImplSymbols.CURRENCY_EGP
 		val baseValue = 2.0
 		val targetCurrency = FakeRepoImplSymbols.CURRENCY_USD
+
+		val viewModel = CurrencyDetailsViewModel(
+			myApp,
+			CurrencyDetailsFragmentArgs(
+				baseCurrency,
+				baseValue.toString(),
+				targetCurrency,
+				""
+			),
+			convertToSeveralCurrenciesForLastThreeDaysUseCase
+		)
+
+		viewModel.fetchRatesForCurrencies()
 
 		val response = convertToSeveralCurrenciesForLastThreeDaysUseCase(
 			baseCurrency,
@@ -62,15 +70,15 @@ class TestCurrencyDetailsViewModel {
 			listOf(targetCurrency)
 		).getOrNull()!!
 
-		assert(response.rates?.size == 3)
+		assertEquals(response.rates?.size, 3)
 
-		assert(response.lastThreeDaysData.value?.size == 3)
+		assertEquals(viewModel.lastThreeDaysData.value?.size, 3)
 
 		val expectedConvertedValue = FakeRepoImplSymbols.getRateOfConversion(
 			baseCurrency, targetCurrency
 		).times(baseValue)
 		val convertedValue = viewModel.lastThreeDaysData.value.orEmpty().first().second
 		assertEquals(expectedConvertedValue, convertedValue, 0.0)
-	}*/
+	}
 
 }

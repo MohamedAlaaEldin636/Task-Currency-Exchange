@@ -2,7 +2,6 @@ package my.ym.taskcurrencyexchange.ui.currencyConversion
 
 import android.app.Application
 import android.view.View
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
 import androidx.navigation.findNavController
@@ -13,12 +12,11 @@ import my.ym.taskcurrencyexchange.R
 import my.ym.taskcurrencyexchange.data.remote.currenciesConversion.RepoConversions
 import my.ym.taskcurrencyexchange.data.remote.currenciesSymbols.RepoSymbols
 import my.ym.taskcurrencyexchange.databinding.FragmentCurrencyConversionBinding
-import my.ym.taskcurrencyexchange.extensions.executeRetryAbleActionOrGoBack
 import my.ym.taskcurrencyexchange.extensions.findBindingOrNull
-import my.ym.taskcurrencyexchange.extensions.findFragmentOrNull
 import my.ym.taskcurrencyexchange.extensions.orZero
 import my.ym.taskcurrencyexchange.extensions.toIntIfNoFractionsOrThis
 import my.ym.taskcurrencyexchange.extensions.toast
+import my.ym.taskcurrencyexchange.helperTypes.BaseAndroidViewModel
 import my.ym.taskcurrencyexchange.models.TwoCurrenciesConversion
 import my.ym.taskcurrencyexchange.models.orEmpty
 import my.ym.taskcurrencyexchange.ui.currencyDetails.CurrencyDetailsFragment
@@ -29,7 +27,7 @@ class CurrencyConversionViewModel @Inject constructor(
 	application: Application,
 	private val repoSymbols: RepoSymbols,
 	private val repoConversions: RepoConversions,
-) : AndroidViewModel(application) {
+) : BaseAndroidViewModel(application) {
 
 	var currenciesSymbols = emptyList<String>()
 
@@ -55,8 +53,8 @@ class CurrencyConversionViewModel @Inject constructor(
 
 	private var jobOfCalculateConversion: Job? = null
 
-	fun fetchAllCurrencies(fragment: CurrencyConversionFragment, onSuccess: () -> Unit) {
-		fragment.executeRetryAbleActionOrGoBack(
+	fun fetchAllCurrencies(onSuccess: () -> Unit) {
+		executeRetryAbleActionOrGoBack(
 			action = {
 				repoSymbols.getAllCurrenciesSymbols()
 			}
@@ -69,8 +67,6 @@ class CurrencyConversionViewModel @Inject constructor(
 
 	fun afterChange(view: View, changeType: CurrencyConversionFragment.ChangeType) {
 		val binding = view.findBindingOrNull<FragmentCurrencyConversionBinding>() ?: return
-
-		val fragment = view.findFragmentOrNull<CurrencyConversionFragment>() ?: return
 
 		var isBaseChangedNotTarget = true
 		val newTwoCurrenciesConversion = when (changeType) {
@@ -124,12 +120,10 @@ class CurrencyConversionViewModel @Inject constructor(
 
 		twoCurrenciesConversion.value = newTwoCurrenciesConversion
 
-		calculateConversionChange(fragment, isBaseChangedNotTarget)
+		calculateConversionChange(isBaseChangedNotTarget)
 	}
 
-	fun swapTargetAndBaseCurrencies(view: View) {
-		val fragment = view.findFragmentOrNull<CurrencyConversionFragment>() ?: return
-
+	fun swapTargetAndBaseCurrencies() {
 		twoCurrenciesConversion.value = twoCurrenciesConversion.value?.let {
 			it.copy(
 				baseCurrency = it.targetCurrency,
@@ -137,25 +131,17 @@ class CurrencyConversionViewModel @Inject constructor(
 			)
 		}
 
-		calculateConversionChange(
-			fragment,
-			true
-		)
+		calculateConversionChange(true)
 	}
 
-	fun swapTargetAndBaseValues(view: View) {
-		val fragment = view.findFragmentOrNull<CurrencyConversionFragment>() ?: return
-
+	fun swapTargetAndBaseValues() {
 		twoCurrenciesConversion.value = twoCurrenciesConversion.value?.let {
 			it.copy(
 				baseValue = it.targetValue,
 			)
 		}
 
-		calculateConversionChange(
-			fragment,
-			true
-		)
+		calculateConversionChange(true)
 	}
 
 	fun goToDetailsScreen(view: View) {
@@ -191,8 +177,8 @@ class CurrencyConversionViewModel @Inject constructor(
 	 * calculate corresponding base value isa.
 	 */
 	fun calculateConversionChange(
-		fragment: CurrencyConversionFragment,
 		isBaseChangedNotTarget: Boolean,
+		ignoreDelay: Boolean = false
 	) {
 		val twoCurrenciesConversion = twoCurrenciesConversion.value
 
@@ -230,7 +216,7 @@ class CurrencyConversionViewModel @Inject constructor(
 				// Used below approach to facilitate changes for user instead of blocking him/her
 				// for each edit of a digit
 				jobOfCalculateConversion?.cancel()
-				jobOfCalculateConversion = fragment.executeRetryAbleActionOrGoBack(
+				jobOfCalculateConversion = executeRetryAbleActionOrGoBack(
 					onShowLoading = {
 						if (isBaseChangedNotTarget) {
 							showLoadingForTargetValue.value = true
@@ -248,7 +234,9 @@ class CurrencyConversionViewModel @Inject constructor(
 					action = {
 						// wait small time in case multiple calls so we don't call api multiple
 						// times unnecessarily
-						delay(300)
+						if (ignoreDelay.not()) {
+							delay(300)
+						}
 
 						if (isBaseChangedNotTarget) {
 							repoConversions.convertCurrencyValue(

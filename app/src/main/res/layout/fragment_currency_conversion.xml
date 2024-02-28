@@ -174,7 +174,7 @@
 
             android:contentDescription="@string/swap"
 
-            android:onClick="@{v -> viewModel.swapTargetAndBaseCurrencies(v)}"
+            android:onClick="@{() -> viewModel.swapTargetAndBaseCurrencies()}"
 
             app:layout_constraintTop_toTopOf="@id/baseCurrencyTextInputLayout"
             app:layout_constraintBottom_toBottomOf="@id/baseCurrencyTextInputLayout"
@@ -196,7 +196,7 @@
 
             android:contentDescription="@string/swap"
 
-            android:onClick="@{v -> viewModel.swapTargetAndBaseValues(v)}"
+            android:onClick="@{() -> viewModel.swapTargetAndBaseValues()}"
 
             app:layout_constraintTop_toTopOf="@id/baseValueTextInputLayout"
             app:layout_constraintBottom_toBottomOf="@id/baseValueTextInputLayout"

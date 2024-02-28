@@ -69,8 +69,6 @@ fun BaseActivity<*>?.showGlobalLoadingDialog(
 
 	dialogGlobalLoading?.setOnKeyListener { _, keyCode, _ ->
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			dismissGlobalLoadingDialog()
-
 			onBackPressed()
 
 			true
@@ -108,7 +106,6 @@ fun BaseActivity<*>?.showGlobalErrorHandlingDialog(
 	binding.msgTextView.text = msg
 	binding.negativeButton.text = negativeButton
 	binding.negativeButton.setOnClickListener {
-		dismissGlobalErrorHandlingDialog()
 		negativeButtonAction()
 	}
 	binding.positiveButton.setOnClickListener {

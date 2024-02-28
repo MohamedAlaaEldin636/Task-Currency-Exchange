@@ -21,7 +21,7 @@ import my.ym.taskcurrencyexchange.models.TwoCurrenciesConversion
 import my.ym.taskcurrencyexchange.ui.commonAdapters.RVItemTextScrollable
 
 @AndroidEntryPoint
-class CurrencyDetailsFragment : BaseFragment<FragmentCurrencyDetailsBinding>() {
+class CurrencyDetailsFragment : BaseFragment<FragmentCurrencyDetailsBinding, CurrencyDetailsViewModel>() {
 
 	companion object {
 		fun launch(navController: NavController, twoCurrenciesConversion: TwoCurrenciesConversion) {
@@ -40,7 +40,7 @@ class CurrencyDetailsFragment : BaseFragment<FragmentCurrencyDetailsBinding>() {
 		}
 	}
 
-	private val viewModel by viewModels<CurrencyDetailsViewModel>()
+	override val viewModel by viewModels<CurrencyDetailsViewModel>()
 
 	private val adapterLastDays = RVItemTextScrollable()
 
@@ -53,6 +53,8 @@ class CurrencyDetailsFragment : BaseFragment<FragmentCurrencyDetailsBinding>() {
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		super.onViewCreated(view, savedInstanceState)
+
 		// Setup views
 		binding?.recyclerViewLastDays?.setupWithAdapter(
 			adapterLastDays,
@@ -76,7 +78,7 @@ class CurrencyDetailsFragment : BaseFragment<FragmentCurrencyDetailsBinding>() {
 		)
 
 		// Fetch data
-		viewModel.fetchRatesForCurrencies(this)
+		viewModel.fetchRatesForCurrencies()
 
 		// Observe Live data
 		viewModel.lastThreeDaysData.observe(viewLifecycleOwner) {

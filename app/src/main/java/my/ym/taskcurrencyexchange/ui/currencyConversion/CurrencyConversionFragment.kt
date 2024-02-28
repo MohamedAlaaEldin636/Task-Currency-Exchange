@@ -12,9 +12,9 @@ import my.ym.taskcurrencyexchange.helperTypes.NonFilterArrayAdapter
 import my.ym.taskcurrencyexchange.models.TwoCurrenciesConversion
 
 @AndroidEntryPoint
-class CurrencyConversionFragment : BaseFragment<FragmentCurrencyConversionBinding>() {
+class CurrencyConversionFragment : BaseFragment<FragmentCurrencyConversionBinding, CurrencyConversionViewModel>() {
 
-	private val viewModel by viewModels<CurrencyConversionViewModel>()
+	override val viewModel by viewModels<CurrencyConversionViewModel>()
 
 	private var adapterBase: ArrayAdapter<String>? = null
 	private var adapterTarget: ArrayAdapter<String>? = null
@@ -26,6 +26,8 @@ class CurrencyConversionFragment : BaseFragment<FragmentCurrencyConversionBindin
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		super.onViewCreated(view, savedInstanceState)
+
 		adapterBase = NonFilterArrayAdapter(requireContext(), R.layout.item_in_list)
 		binding?.baseCurrencyAutoCompleteTextView?.setAdapter(adapterBase)
 
@@ -34,7 +36,7 @@ class CurrencyConversionFragment : BaseFragment<FragmentCurrencyConversionBindin
 
 		// Get All Symbols
 		if (viewModel.currenciesSymbols.isEmpty()) {
-			viewModel.fetchAllCurrencies(this, ::performAfterGettingCurrencies)
+			viewModel.fetchAllCurrencies(::performAfterGettingCurrencies)
 		}else {
 			performAfterGettingCurrencies()
 		}
@@ -58,7 +60,7 @@ class CurrencyConversionFragment : BaseFragment<FragmentCurrencyConversionBindin
 				)
 			}
 
-			viewModel.calculateConversionChange(this, true)
+			viewModel.calculateConversionChange(true)
 		}
 	}
 
