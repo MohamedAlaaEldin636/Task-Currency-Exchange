@@ -26,7 +26,7 @@ abstract class BaseAndroidViewModel(application: Application) : AndroidViewModel
 		scope: CoroutineScope = viewModelScope,
 		onShowLoading: (() -> Unit)? = null,
 		onHideLoading: (() -> Unit)? = null,
-		onFailure: (Result<T>) -> Unit = {},
+		onFailure: ((result: Result<T>, retryBlock: () -> Unit) -> Unit)? = null,
 		onSuccess: (T?) -> Unit,
 	): Job = executeRetryAbleActionOrFallback(
 		action, scope, FallbackAction.GO_BACK, onShowLoading, onHideLoading, onFailure, onSuccess
@@ -37,7 +37,7 @@ abstract class BaseAndroidViewModel(application: Application) : AndroidViewModel
 		scope: CoroutineScope = viewModelScope,
 		onShowLoading: (() -> Unit)? = null,
 		onHideLoading: (() -> Unit)? = null,
-		onFailure: (Result<T>) -> Unit = {},
+		onFailure: ((result: Result<T>, retryBlock: () -> Unit) -> Unit)? = null,
 		onSuccess: (T?) -> Unit,
 	): Job = executeRetryAbleActionOrFallback(
 		action, scope, FallbackAction.CANCEL, onShowLoading, onHideLoading, onFailure, onSuccess
@@ -49,7 +49,7 @@ abstract class BaseAndroidViewModel(application: Application) : AndroidViewModel
 		fallbackAction: FallbackAction,
 		onShowLoading: (() -> Unit)? = null,
 		onHideLoading: (() -> Unit)? = null,
-		onFailure: (Result<T>) -> Unit = {},
+		onFailure: ((result: Result<T>, retryBlock: () -> Unit) -> Unit)? = null,
 		onSuccess: (T?) -> Unit,
 	): Job {
 		val showLoading: (CoroutineScope) -> Unit = {
@@ -69,13 +69,21 @@ abstract class BaseAndroidViewModel(application: Application) : AndroidViewModel
 		}
 
 		val onError: (Result<T>) -> Unit = {
-			showGlobalErrorHandlingDialog.value = GlobalErrorData(
-				it.getErrorMsg(myApp),
-				fallbackAction,
-			) {
-				executeRetryAbleActionOrFallback(
-					action, scope, fallbackAction, onShowLoading, onHideLoading, onFailure, onSuccess
-				)
+			if (onFailure != null) {
+				onFailure(it) {
+					executeRetryAbleActionOrFallback(
+						action, scope, fallbackAction, onShowLoading, onHideLoading, onFailure, onSuccess
+					)
+				}
+			}else {
+				showGlobalErrorHandlingDialog.value = GlobalErrorData(
+					it.getErrorMsg(myApp),
+					fallbackAction,
+				) {
+					executeRetryAbleActionOrFallback(
+						action, scope, fallbackAction, onShowLoading, onHideLoading, null, onSuccess
+					)
+				}
 			}
 		}
 
