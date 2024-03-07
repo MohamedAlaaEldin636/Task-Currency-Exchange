@@ -47,16 +47,77 @@ abstract class BaseFragment<VDB : ViewDataBinding, VM : BaseAndroidViewModel> : 
 
 	@CallSuper
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		observeGlobalLoading()
+
+		observeGlobalError()
+
+		setupViews()
+
+		observeLiveData()
+	}
+
+	@CallSuper
+	override fun onResume() {
+		super.onResume()
+
+		showOrHideGlobalLoading(viewModel.showGlobalLoadingDialog.value)
+
+		showOrHideGlobalError(viewModel.showGlobalErrorHandlingDialog.value)
+	}
+
+	protected open fun observeGlobalLoading() {
 		viewModel.showGlobalLoadingDialog.distinctUntilChanged().observe(viewLifecycleOwner) {
-			if (it != null) {
-				showGlobalLoadingDialog {
-					viewModel.showGlobalLoadingDialog.value = null
+			if (isResumed) {
+				showOrHideGlobalLoading(it)
+			}
+		}
+	}
 
-					it.coroutineScope.cancel()
+	protected open fun observeGlobalError() {
+		viewModel.showGlobalErrorHandlingDialog.distinctUntilChanged().observe(viewLifecycleOwner) {
+			if (isResumed) {
+				showOrHideGlobalError(it)
+			}
+		}
+	}
 
-					context?.toast(getString(R.string.you_cancelled_the_action_successfully))
+	protected open fun showOrHideGlobalLoading(it: BaseAndroidViewModel.GlobalLoadingData?) {
+		if (it != null) {
+			showGlobalLoadingDialog {
+				viewModel.showGlobalLoadingDialog.value = null
 
-					dismissGlobalLoadingDialog()
+				it.coroutineScope.cancel()
+
+				context?.toast(getString(R.string.you_cancelled_the_action_successfully))
+
+				dismissGlobalLoadingDialog()
+
+				when (it.fallbackAction) {
+					BaseAndroidViewModel.FallbackAction.CANCEL -> {}
+					BaseAndroidViewModel.FallbackAction.GO_BACK -> {
+						goBackIfPossible()
+					}
+				}
+			}
+		}else {
+			dismissGlobalLoadingDialog()
+		}
+	}
+
+	protected open fun showOrHideGlobalError(it: BaseAndroidViewModel.GlobalErrorData?) {
+		if (it != null) {
+			val negativeButtonText = when (it.fallbackAction) {
+				BaseAndroidViewModel.FallbackAction.CANCEL -> getString(R.string.cancel)
+				BaseAndroidViewModel.FallbackAction.GO_BACK -> getString(R.string.back)
+			}
+
+			showGlobalErrorHandlingDialog(
+				it.msg,
+				negativeButtonText,
+				negativeButtonAction = {
+					viewModel.showGlobalErrorHandlingDialog.value = null
+
+					dismissGlobalErrorHandlingDialog()
 
 					when (it.fallbackAction) {
 						BaseAndroidViewModel.FallbackAction.CANCEL -> {}
@@ -65,45 +126,21 @@ abstract class BaseFragment<VDB : ViewDataBinding, VM : BaseAndroidViewModel> : 
 						}
 					}
 				}
-			}else {
-				dismissGlobalLoadingDialog()
-			}
-		}
+			) {
+				viewModel.showGlobalErrorHandlingDialog.value = null
 
-		viewModel.showGlobalErrorHandlingDialog.distinctUntilChanged().observe(viewLifecycleOwner) {
-			if (it != null) {
-				val negativeButtonText = when (it.fallbackAction) {
-					BaseAndroidViewModel.FallbackAction.CANCEL -> getString(R.string.cancel)
-					BaseAndroidViewModel.FallbackAction.GO_BACK -> getString(R.string.back)
-				}
-
-				showGlobalErrorHandlingDialog(
-					it.msg,
-					negativeButtonText,
-					negativeButtonAction = {
-						viewModel.showGlobalErrorHandlingDialog.value = null
-
-						dismissGlobalErrorHandlingDialog()
-
-						when (it.fallbackAction) {
-							BaseAndroidViewModel.FallbackAction.CANCEL -> {}
-							BaseAndroidViewModel.FallbackAction.GO_BACK -> {
-								goBackIfPossible()
-							}
-						}
-					}
-				) {
-					viewModel.showGlobalErrorHandlingDialog.value = null
-
-					dismissGlobalErrorHandlingDialog()
-
-					it.retryAbleFun()
-				}
-			}else {
 				dismissGlobalErrorHandlingDialog()
+
+				it.retryAbleFun()
 			}
+		}else {
+			dismissGlobalErrorHandlingDialog()
 		}
 	}
+
+	protected open fun setupViews() {}
+
+	protected open fun observeLiveData() {}
 
 	@CallSuper
 	override fun onDestroyView() {

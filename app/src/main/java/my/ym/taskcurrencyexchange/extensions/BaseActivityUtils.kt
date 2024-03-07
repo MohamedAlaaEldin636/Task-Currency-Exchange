@@ -47,7 +47,7 @@ fun BaseActivity<*>?.dismissGlobalErrorHandlingDialog() {
 fun BaseActivity<*>?.showGlobalLoadingDialog(
 	onBackPressed: () -> Unit
 ) {
-	if (this == null || isFinishing) {
+	if (this == null || isFinishing || dialogGlobalLoading?.isShowing == true) {
 		return
 	}
 
@@ -87,7 +87,7 @@ fun BaseActivity<*>?.showGlobalErrorHandlingDialog(
 	negativeButtonAction: () -> Unit,
 	onRetry: () -> Unit
 ) {
-	if (this == null || isFinishing) {
+	if (this == null || isFinishing || dialogGlobalErrorHandling?.isShowing == true) {
 		return
 	}
 
